@@ -5,12 +5,23 @@ import (
 	"encoding/xml"
 	"fmt"
 	"net/http"
+
+	"github.com/gorilla/mux"
 )
 
 type Client struct {
 	Name    string `xml:"name"    json:"name"`
 	City    string `xml:"city"    json:"city"`
 	Zipcode int    `xml:"zipcode" json:"zipcode"`
+}
+
+func createClient(w http.ResponseWriter, r *http.Request) {
+	fmt.Fprint(w, "Post a request")
+}
+
+func getClients(w http.ResponseWriter, r *http.Request) {
+	vars := mux.Vars(r)
+	fmt.Fprint(w, vars["client_id"])
 }
 
 func greet(w http.ResponseWriter, r *http.Request) {
