@@ -10,9 +10,10 @@ import (
 )
 
 type Client struct {
-	Name    string `xml:"name"    json:"name"`
-	City    string `xml:"city"    json:"city"`
-	Zipcode int    `xml:"zipcode" json:"zipcode"`
+	Name     string `xml:"name"      json:"name"`
+	City     string `xml:"city"      json:"city"`
+	Zipcode  int    `xml:"zipcode"   json:"zipcode"`
+	ClientNo int    `xml:"client_no" json:"client_no"`
 }
 
 func createClient(w http.ResponseWriter, r *http.Request) {
@@ -31,14 +32,16 @@ func greet(w http.ResponseWriter, r *http.Request) {
 func allClient(w http.ResponseWriter, r *http.Request) {
 	clients := []Client{
 		{
-			Name:    "John Michael",
-			City:    "Gensan",
-			Zipcode: 9500,
+			Name:     "John Michael",
+			City:     "Gensan",
+			Zipcode:  9500,
+			ClientNo: 10016,
 		},
 		{
-			Name:    "Jm",
-			City:    "Paranaque",
-			Zipcode: 1700,
+			Name:     "Jm",
+			City:     "Paranaque",
+			Zipcode:  1700,
+			ClientNo: 10007,
 		},
 	}
 
