@@ -5,17 +5,18 @@ import (
 	"net/http"
 
 	"github.com/gorilla/mux"
+
+	"github.com/jmechavez/restapi_go/insurance/domain"
+	"github.com/jmechavez/restapi_go/insurance/service"
 )
 
 func Start() {
 	router := mux.NewRouter()
 
-	// define routes
-	router.HandleFunc("/greet", greet).Methods(http.MethodGet)
-	router.HandleFunc("/clients", allClient).Methods(http.MethodGet)
-	router.HandleFunc("/clients", createClient).Methods(http.MethodPost)
+	ch := ClientHandlers{service.NewClientService(domain.NewClientRepositoryStub())}
 
-	router.HandleFunc("/clients/{client_id:[0-9]+}", getClients).Methods(http.MethodGet)
+	// define routes
+	router.HandleFunc("/clients", ch.getAllClient).Methods(http.MethodGet)
 
 	// starting server
 	log.Fatal(http.ListenAndServe("localhost:8000", router))
