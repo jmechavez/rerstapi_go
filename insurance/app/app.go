@@ -13,8 +13,8 @@ import (
 func Start() {
 	router := mux.NewRouter()
 
-	ch := ClientHandlers{service.NewClientService(domain.NewClientRepositoryStub())}
-
+	// ch := ClientHandlers{service.NewClientService(domain.NewClientRepositoryStub())}
+	ch := ClientHandlers{service.NewClientService(domain.NewClientRepositoryDb())}
 	// define routes
 	router.HandleFunc("/clients", ch.getAllClient).Methods(http.MethodGet)
 
