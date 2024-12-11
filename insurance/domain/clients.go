@@ -10,10 +10,11 @@ type Client struct {
 	IdNo2      string `json:"id_no_2"`
 	BirthPlace string `json:"birthplace"`
 	ContactNo  string `json:"contact_no"`
-	Status     int    `json:"status"`
+	Status     bool   `json:"status"`
 	Gender     string `json:"gender"`
 }
 
 type ClientRepository interface {
 	FindAll() ([]Client, error)
+	FindName() ([]Client, error)
 }

@@ -20,7 +20,7 @@ func NewClientRepositoryStub() ClientRepositoryStub {
 			"002-002-002",
 			"General Santos City",
 			"0900000001",
-			1,
+			true,
 			"Male",
 		},
 		{
@@ -33,7 +33,7 @@ func NewClientRepositoryStub() ClientRepositoryStub {
 			"004-004-004",
 			"General Santos City",
 			"0900000002",
-			1,
+			false,
 			"Male",
 		},
 	}

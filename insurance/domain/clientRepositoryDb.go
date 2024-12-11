@@ -11,6 +11,31 @@ type ClientRepositoryDb struct {
 	clientDb *sql.DB
 }
 
+func (r ClientRepositoryDb) FindName() ([]Client, error) {
+	findNameSql := "Select fname, lname"
+	rows, err := r.clientDb.Query(findNameSql)
+	if err != nil {
+		log.Println("Error while querying client table: " + err.Error())
+		return nil, err
+	}
+	defer rows.Close()
+
+	clients := make([]Client, 0)
+	for rows.Next() {
+		var c Client
+		err := rows.Scan(
+			&c.Fname,
+			&c.Lname,
+		)
+		if err != nil {
+			log.Println("Error while scanning client table: " + err.Error())
+			return nil, err
+		}
+		clients = append(clients, c)
+	}
+	return clients, nil
+}
+
 func (r ClientRepositoryDb) FindAll() ([]Client, error) {
 	findAllSql := "SELECT fname, lname, birthdate, id_card_1, id_no_1, id_card_2, id_no_2, birthplace, contact_no, status, gender FROM clients"
 	rows, err := r.clientDb.Query(findAllSql)
@@ -32,8 +57,8 @@ func (r ClientRepositoryDb) FindAll() ([]Client, error) {
 			&c.IdCard2,
 			&c.IdNo2,
 			&c.BirthPlace,
-			&c.Status,
 			&c.ContactNo,
+			&c.Status,
 			&c.Gender,
 		)
 		if err != nil {
