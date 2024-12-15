@@ -2,6 +2,7 @@ package domain
 
 import (
 	"database/sql"
+	"errors"
 	"log"
 
 	_ "github.com/lib/pq"
@@ -32,8 +33,12 @@ func (r ClientRepositoryDb) ByName(id string) (*Client, error) {
 		&c.Gender,
 	)
 	if err != nil {
-		log.Println("Error while querying client table: " + err.Error())
-		return nil, err
+		if err == sql.ErrNoRows {
+			return nil, errors.New("Client not found")
+		} else {
+			log.Println("Error while querying client table: " + err.Error())
+			return nil, errors.New("Unexpected Error")
+		}
 	}
 	return &c, nil
 }
