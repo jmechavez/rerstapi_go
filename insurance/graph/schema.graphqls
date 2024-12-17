@@ -1,0 +1,22 @@
+type Client {
+  fname: String!
+  lname: String!
+  birthdate: String!
+  idCard1: String!
+  idNo1: String!
+  idCard2: String!
+  idNo2: String!
+  birthPlace: String!
+  contactNo: String!
+  status: Boolean!
+  gender: String!
+}
+
+type Query {
+  clients: [Client!]!
+  clientByName(fname: String!): Client
+}
+
+schema {
+  query: Query
+}

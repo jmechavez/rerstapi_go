@@ -17,4 +17,5 @@ type Client struct {
 type ClientRepository interface {
 	FindAll() ([]Client, error)
 	ByName(string) (*Client, error)
+	JustName(string) (*Client, error)
 }

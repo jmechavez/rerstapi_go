@@ -12,6 +12,25 @@ type ClientRepositoryDb struct {
 	clientDb *sql.DB
 }
 
+func (r ClientRepositoryDb) JustName(fname string) (*Client, error) {
+	findNameSql := `SELECT fname FROM clients WHERE fname = $1`
+
+	rows := r.clientDb.QueryRow(findNameSql, fname)
+	var c Client
+	err := rows.Scan(
+		&c.Fname,
+	)
+	if err != nil {
+		if err == sql.ErrNoRows {
+			return nil, errors.New("Client not found")
+		} else {
+			log.Println("Error while querying client table: " + err.Error())
+			return nil, errors.New("Unexpected Error")
+		}
+	}
+	return &c, nil
+}
+
 func (r ClientRepositoryDb) ByName(id string) (*Client, error) {
 	findNameSql := `SELECT fname, lname, birthdate, id_card_1, id_no_1, id_card_2, id_no_2, 
                 birthplace, contact_no, status, gender 
