@@ -1,10 +1,13 @@
 package service
 
-import "github.com/jmechavez/restapi_go/insurance/domain"
+import (
+	"github.com/jmechavez/restapi_go/insurance/domain"
+	"github.com/jmechavez/restapi_go/insurance/errs"
+)
 
 type ClientService interface {
 	GetAllClient() ([]domain.Client, error)
-	FindName(string) (*domain.Client, error)
+	FindName(string) (*domain.Client, *errs.AppError)
 	JustFName(string) (*domain.Client, error)
 }
 
@@ -16,7 +19,7 @@ func (r DefaultClientService) GetAllClient() ([]domain.Client, error) {
 	return r.repo.FindAll()
 }
 
-func (r DefaultClientService) FindName(id string) (*domain.Client, error) {
+func (r DefaultClientService) FindName(id string) (*domain.Client, *errs.AppError) {
 	return r.repo.ByName(id)
 }
 

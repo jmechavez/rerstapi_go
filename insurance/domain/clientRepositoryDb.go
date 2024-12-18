@@ -6,6 +6,8 @@ import (
 	"log"
 
 	_ "github.com/lib/pq"
+
+	"github.com/jmechavez/restapi_go/insurance/errs"
 )
 
 type ClientRepositoryDb struct {
@@ -25,13 +27,13 @@ func (r ClientRepositoryDb) JustName(fname string) (*Client, error) {
 			return nil, errors.New("Client not found")
 		} else {
 			log.Println("Error while querying client table: " + err.Error())
-			return nil, errors.New("Unexpected Error")
+			return nil, errors.New("Unexpected database Error")
 		}
 	}
 	return &c, nil
 }
 
-func (r ClientRepositoryDb) ByName(id string) (*Client, error) {
+func (r ClientRepositoryDb) ByName(id string) (*Client, *errs.AppError) {
 	findNameSql := `SELECT fname, lname, birthdate, id_card_1, id_no_1, id_card_2, id_no_2, 
                 birthplace, contact_no, status, gender 
                 FROM clients WHERE fname = $1`
@@ -53,10 +55,10 @@ func (r ClientRepositoryDb) ByName(id string) (*Client, error) {
 	)
 	if err != nil {
 		if err == sql.ErrNoRows {
-			return nil, errors.New("Client not found")
+			return nil, errs.NewNotFoundError("Client not found")
 		} else {
 			log.Println("Error while querying client table: " + err.Error())
-			return nil, errors.New("Unexpected Error")
+			return nil, errs.NewUnxpectedError("Unexpected database Error")
 		}
 	}
 	return &c, nil

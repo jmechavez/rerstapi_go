@@ -1,5 +1,7 @@
 package domain
 
+import "github.com/jmechavez/restapi_go/insurance/errs"
+
 type Client struct {
 	Fname      string `json:"fname"`
 	Lname      string `json:"lname"`
@@ -16,6 +18,6 @@ type Client struct {
 
 type ClientRepository interface {
 	FindAll() ([]Client, error)
-	ByName(string) (*Client, error)
+	ByName(string) (*Client, *errs.AppError)
 	JustName(string) (*Client, error)
 }
