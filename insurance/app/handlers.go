@@ -37,10 +37,13 @@ func (ch *ClientHandlers) FindName(w http.ResponseWriter, r *http.Request) {
 
 	client, err := ch.service.FindName(fname)
 	if err != nil {
+		w.Header().Add("Content-Type", "application/json")
 		w.WriteHeader(err.Code)
-		fmt.Fprint(w, err.Message)
+		json.NewEncoder(w).Encode(err.AsMessage())
+		// fmt.Fprint(w, err.Message)
 	} else {
 		w.Header().Add("Content-Type", "application/json")
+		w.WriteHeader(http.StatusOK)
 		json.NewEncoder(w).Encode(client)
 	}
 }
@@ -51,8 +54,8 @@ func (ch *ClientHandlers) JustFname(w http.ResponseWriter, r *http.Request) {
 
 	client, err := ch.service.FindName(fname)
 	if err != nil {
-		w.WriteHeader(http.StatusNotFound)
-		fmt.Fprint(w, err.Error())
+		w.WriteHeader(err.Code)
+		fmt.Fprint(w, err.Message)
 	} else {
 		w.Header().Add("Content-Type", "application/json")
 		response := FnameResponse{

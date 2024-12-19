@@ -18,7 +18,7 @@ func Start() {
 	// define routes
 	router.HandleFunc("/clients", ch.getAllClient).Methods(http.MethodGet)
 	router.HandleFunc("/clients/{fname}", ch.FindName).Methods(http.MethodGet)
-	// router.HandleFunc("/clients/{fname}", ch.getAllClient).Methods(http.MethodGet)
+	// router.HandleFunc("/clients/{fname}", ch.JustFname).Methods(http.MethodGet)
 
 	// starting server
 	log.Fatal(http.ListenAndServe("localhost:8000", router))
