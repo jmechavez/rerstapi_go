@@ -37,14 +37,13 @@ func (ch *ClientHandlers) FindName(w http.ResponseWriter, r *http.Request) {
 
 	client, err := ch.service.FindName(fname)
 	if err != nil {
-		w.Header().Add("Content-Type", "application/json")
-		w.WriteHeader(err.Code)
-		json.NewEncoder(w).Encode(err.AsMessage())
+		// w.Header().Add("Content-Type", "application/json")
+		// w.WriteHeader(err.Code)
+		// json.NewEncoder(w).Encode(err.AsMessage())
 		// fmt.Fprint(w, err.Message)
+		writeResponse(w, err.Code, err.AsMessage())
 	} else {
-		w.Header().Add("Content-Type", "application/json")
-		w.WriteHeader(http.StatusOK)
-		json.NewEncoder(w).Encode(client)
+		writeResponse(w, http.StatusOK, client)
 	}
 }
 
@@ -62,5 +61,20 @@ func (ch *ClientHandlers) JustFname(w http.ResponseWriter, r *http.Request) {
 			Fname: client.Fname,
 		}
 		json.NewEncoder(w).Encode(response)
+	}
+}
+
+func writeResponse(w http.ResponseWriter, code int, data interface{}) {
+	w.Header().Add("Content-Type", "application/json")
+	w.WriteHeader(code)
+	// shorter format code
+	// if err := json.NewEncoder(w).Encode(data); err != nil {
+	// 	panic(err)
+	// }
+
+	// long format
+	err := json.NewEncoder(w).Encode(data)
+	if err != nil {
+		panic(fmt.Sprintf("failed to encode response: %v", err))
 	}
 }
