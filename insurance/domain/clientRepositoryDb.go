@@ -64,12 +64,12 @@ func (r ClientRepositoryDb) ByName(id string) (*Client, *errs.AppError) {
 	return &c, nil
 }
 
-func (r ClientRepositoryDb) FindAll() ([]Client, error) {
+func (r ClientRepositoryDb) FindAll() ([]Client, *errs.AppError) {
 	findAllSql := "SELECT fname, lname, birthdate, id_card_1, id_no_1, id_card_2, id_no_2, birthplace, contact_no, status, gender FROM clients"
 	rows, err := r.clientDb.Query(findAllSql)
 	if err != nil {
 		log.Println("Error while querying client table: " + err.Error())
-		return nil, err
+		return nil, errs.NewUnxpectedError("Unxepected datebase server error")
 	}
 	defer rows.Close()
 
@@ -91,7 +91,7 @@ func (r ClientRepositoryDb) FindAll() ([]Client, error) {
 		)
 		if err != nil {
 			log.Println("Error while scanning client table: " + err.Error())
-			return nil, err
+			return nil, errs.NewNotFoundError("505")
 		}
 		clients = append(clients, c)
 	}

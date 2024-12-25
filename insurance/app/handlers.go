@@ -2,7 +2,6 @@ package app
 
 import (
 	"encoding/json"
-	"encoding/xml"
 	"fmt"
 	"net/http"
 
@@ -20,14 +19,19 @@ type FnameResponse struct {
 }
 
 func (ch *ClientHandlers) getAllClient(w http.ResponseWriter, r *http.Request) {
-	clients, _ := ch.service.GetAllClient()
+	clients, err := ch.service.GetAllClient()
 	// if xml format if not json format
-	if r.Header.Get("Content-Type") == "application/xml" {
-		w.Header().Add("Content-Type", "application/xml")
-		xml.NewEncoder(w).Encode(clients)
+	// if r.Header.Get("Content-Type") == "application/xml" {
+	// 	w.Header().Add("Content-Type", "application/xml")
+	// 	xml.NewEncoder(w).Encode(clients)
+	// } else {
+	// 	w.Header().Add("Content-Type", "application/json")
+	// 	json.NewEncoder(w).Encode(clients)
+	// }
+	if err != nil {
+		writeResponse(w, err.Code, err.AsMessage())
 	} else {
-		w.Header().Add("Content-Type", "application/json")
-		json.NewEncoder(w).Encode(clients)
+		writeResponse(w, http.StatusOK, clients)
 	}
 }
 

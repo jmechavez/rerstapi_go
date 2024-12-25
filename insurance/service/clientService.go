@@ -6,7 +6,7 @@ import (
 )
 
 type ClientService interface {
-	GetAllClient() ([]domain.Client, error)
+	GetAllClient() ([]domain.Client, *errs.AppError)
 	FindName(string) (*domain.Client, *errs.AppError)
 	JustFName(string) (*domain.Client, error)
 }
@@ -15,7 +15,7 @@ type DefaultClientService struct {
 	repo domain.ClientRepository
 }
 
-func (r DefaultClientService) GetAllClient() ([]domain.Client, error) {
+func (r DefaultClientService) GetAllClient() ([]domain.Client, *errs.AppError) {
 	return r.repo.FindAll()
 }
 
