@@ -64,9 +64,20 @@ func (r ClientRepositoryDb) ByName(id string) (*Client, *errs.AppError) {
 	return &c, nil
 }
 
-func (r ClientRepositoryDb) FindAll() ([]Client, *errs.AppError) {
-	findAllSql := "SELECT fname, lname, birthdate, id_card_1, id_no_1, id_card_2, id_no_2, birthplace, contact_no, status, gender FROM clients"
-	rows, err := r.clientDb.Query(findAllSql)
+func (r ClientRepositoryDb) FindAll(status string) ([]Client, *errs.AppError) {
+	var rows *sql.Rows
+	var err error
+	if status == "" {
+		findAllSql := `SELECT fname, lname, birthdate, id_card_1, id_no_1, id_card_2, id_no_2, 
+                       birthplace, contact_no, status, gender 
+                       FROM clients`
+		rows, err = r.clientDb.Query(findAllSql)
+	} else {
+		findAllSql := `SELECT fname, lname, birthdate, id_card_1, id_no_1, id_card_2, id_no_2, 
+                       birthplace, contact_no, status, gender 
+                       FROM clients WHERE status = ?`
+		rows, err = r.clientDb.Query(findAllSql, status)
+	}
 	if err != nil {
 		log.Println("Error while querying client table: " + err.Error())
 		return nil, errs.NewUnxpectedError("Unxepected datebase server error")

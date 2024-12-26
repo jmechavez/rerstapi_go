@@ -19,7 +19,10 @@ type FnameResponse struct {
 }
 
 func (ch *ClientHandlers) getAllClient(w http.ResponseWriter, r *http.Request) {
-	clients, err := ch.service.GetAllClient()
+	status := r.URL.Query().Get("status")
+
+	clients, err := ch.service.GetAllClient(status)
+
 	// if xml format if not json format
 	// if r.Header.Get("Content-Type") == "application/xml" {
 	// 	w.Header().Add("Content-Type", "application/xml")

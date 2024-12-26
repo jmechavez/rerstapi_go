@@ -6,7 +6,7 @@ import (
 )
 
 type ClientService interface {
-	GetAllClient() ([]domain.Client, *errs.AppError)
+	GetAllClient(string) ([]domain.Client, *errs.AppError)
 	FindName(string) (*domain.Client, *errs.AppError)
 	JustFName(string) (*domain.Client, error)
 }
@@ -15,8 +15,15 @@ type DefaultClientService struct {
 	repo domain.ClientRepository
 }
 
-func (r DefaultClientService) GetAllClient() ([]domain.Client, *errs.AppError) {
-	return r.repo.FindAll()
+func (r DefaultClientService) GetAllClient(status string) ([]domain.Client, *errs.AppError) {
+	if status == "active" {
+		status = "true"
+	} else if status == "inactive" {
+		status = "false"
+	} else {
+		status = ""
+	}
+	return r.repo.FindAll(status)
 }
 
 func (r DefaultClientService) FindName(id string) (*domain.Client, *errs.AppError) {
