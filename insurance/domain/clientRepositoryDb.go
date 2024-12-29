@@ -3,11 +3,11 @@ package domain
 import (
 	"database/sql"
 	"errors"
-	"log"
 
 	_ "github.com/lib/pq"
 
 	"github.com/jmechavez/restapi_go/insurance/errs"
+	"github.com/jmechavez/restapi_go/insurance/logger"
 )
 
 type ClientRepositoryDb struct {
@@ -26,7 +26,7 @@ func (r ClientRepositoryDb) JustName(fname string) (*Client, error) {
 		if err == sql.ErrNoRows {
 			return nil, errors.New("Client not found")
 		} else {
-			log.Println("Error while querying client table: " + err.Error())
+			logger.Error("Error while querying client table: " + err.Error())
 			return nil, errors.New("Unexpected database Error")
 		}
 	}
@@ -57,7 +57,7 @@ func (r ClientRepositoryDb) ByName(id string) (*Client, *errs.AppError) {
 		if err == sql.ErrNoRows {
 			return nil, errs.NewNotFoundError("Client not found")
 		} else {
-			log.Println("Error while querying client table: " + err.Error())
+			logger.Error("Error while querying client table: " + err.Error())
 			return nil, errs.NewUnxpectedError("Unexpected database Error")
 		}
 	}
@@ -83,7 +83,7 @@ func (r ClientRepositoryDb) FindAll(status string) ([]Client, *errs.AppError) {
 
 	// Handle query execution error
 	if err != nil {
-		log.Printf("Error while querying clients table: %v\n", err)
+		logger.Error("Error while querying clients table: %v\n" + err.Error())
 		return nil, errs.NewUnxpectedError("Unexpected database server error")
 	}
 	defer rows.Close()
@@ -106,7 +106,7 @@ func (r ClientRepositoryDb) FindAll(status string) ([]Client, *errs.AppError) {
 			&c.Gender,
 		)
 		if err != nil {
-			log.Printf("Error while scanning clients table: %v\n", err)
+			logger.Error("Error while scanning clients table: %v\n" + err.Error())
 			return nil, errs.NewUnxpectedError("Error parsing client data")
 		}
 		clients = append(clients, c)
@@ -114,7 +114,7 @@ func (r ClientRepositoryDb) FindAll(status string) ([]Client, *errs.AppError) {
 
 	// Ensure rows are iterated without errors
 	if err = rows.Err(); err != nil {
-		log.Printf("Error after scanning rows: %v\n", err)
+		logger.Error("Error after scanning rows: %v\n" + err.Error())
 		return nil, errs.NewUnxpectedError("Unexpected row iteration error")
 	}
 
